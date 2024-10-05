@@ -6,6 +6,7 @@ const theme = {
       primary: '#9893bc',    // Primary color
       background: '#FBF2EE', // Background color
       gray: '#BFBFBF',       // Gray color
+        white: '#FFF',
     },
   };
   
