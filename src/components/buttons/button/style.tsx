@@ -57,6 +57,6 @@ export const styles = StyleSheet.create({
     },
 
     transparentText: {
-      color: theme.colors.text, // Cor do texto para o botão transparente
+      color: theme.colors.secondary, // Cor do texto para o botão transparente
     }
 });
