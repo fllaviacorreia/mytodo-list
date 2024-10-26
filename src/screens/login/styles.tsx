@@ -5,7 +5,7 @@ export const styles = StyleSheet.create(
     {
         container: {
             flex:1,
-            justifyContent: 'center',
+            justifyContent: 'space-between',
             alignItems: 'center',
             backgroundColor: theme.colors.background,
             width: '100%',
@@ -13,20 +13,21 @@ export const styles = StyleSheet.create(
         },
         form:{
             width: "100%",
-            height: "60%",
+            height: "70%",
             justifyContent: 'flex-end',
         },
         title:{
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: 'bold',
+            width: "100%",
+            textAlign: 'center',
+            marginBottom: 30,
             color: theme.colors.primary
         },
         linkContainer: {
-            height: "20%",
+            height: 150,
             width: "100%",
             justifyContent: 'flex-end',
-            alignItems: 'center'
-
         },
         link: {
             color: theme.colors.secondary,
