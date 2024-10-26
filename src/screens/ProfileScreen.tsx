@@ -2,27 +2,18 @@ import * as React from 'react';
 import { View, Text } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RoutesParamList } from '../navigation/AppNavigation';
-import { CommonActions, useNavigation } from '@react-navigation/native';
 import theme from 'theme';
 import Button from '@/components/buttons/button';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '@/context/AuthContext';
 
 type profileScreenProp = NativeStackNavigationProp<RoutesParamList, "Profile">;
 
 export default function ProfileScreen() {
-    const navigation = useNavigation<profileScreenProp>();
+    const authContext = useAuth();
     const handleLogout = async () => {
       try {
         // Remove a sessão do AsyncStorage
-        await AsyncStorage.removeItem('mytodo-session');
-    
-        // Reseta a pilha de navegação e navega para a tela de Login
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: 'Login' }],
-          })
-        );
+        await authContext.logout();
       } catch (error) {
         console.error('Erro ao fazer logout:', error);
       }
@@ -32,7 +23,7 @@ export default function ProfileScreen() {
       <Text>Profile Screen</Text>
       <Button
         className="warning"
-        title="Go to Login"
+        title="Logout"
         onPress={() => handleLogout()}
       />
     </View>

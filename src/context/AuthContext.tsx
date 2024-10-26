@@ -1,10 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
+import { set } from "zod";
 
 // Definindo a interface para o contexto de autenticação
 type AuthContextType = {
   isAuthenticated: boolean;
+  isFirstAccess: boolean;
   keepConnected: boolean;
   user: { name: string; email: string; password: string };
   login: (email: string, password: string, keepConnected: boolean) => Promise<void>;
@@ -16,6 +18,7 @@ type AuthContextType = {
 // Criando o contexto com valores padrão
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
+  isFirstAccess: false,
   keepConnected: false,
   user: { name: '', email: '', password: '' },
   login: async () => {},
@@ -28,7 +31,7 @@ function AuthProvider({ children }: any) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [keepConnected, setKeepConnected] = useState(false);
   const [user, setUser] = useState({ name: '', email: '', password: '' });
-
+  const [isFirstAccess, setIsFirstAccess] = useState(false);
   // Função para carregar os dados do AsyncStorage
   const loadStoredData = async () => {
     try {
@@ -38,8 +41,12 @@ function AuthProvider({ children }: any) {
       if (storedUser) {
         setUser(JSON.parse(storedUser));
         setKeepConnected(storedKeepConnected === 'true');
-        setIsAuthenticated(true);
+        setIsAuthenticated(keepConnected);
+        setIsFirstAccess(false);
+      }else{
+        setIsFirstAccess(true);
       }
+    
     } catch (error) {
       console.error("Erro ao carregar os dados do AsyncStorage:", error);
     }
@@ -53,15 +60,20 @@ function AuthProvider({ children }: any) {
   // Função de login
   const login = async (email: string, password: string, keepConnected: boolean) => {
     if (email && password) {
-      const fakeUser = { name: 'Usuário Teste', email, password };
-
       try {
-        await AsyncStorage.setItem('@mytodo-user', JSON.stringify(fakeUser));
-        await AsyncStorage.setItem('@mytodo-keepConnected', keepConnected.toString());
+       const userStoraged = await AsyncStorage.getItem('@mytodo-user');
 
-        setUser(fakeUser);
-        setKeepConnected(keepConnected);
-        setIsAuthenticated(true);
+        if (userStoraged) {
+          const user = JSON.parse(userStoraged);
+          if (user.email === email && user.password === password) {
+            setUser(user);
+            setIsAuthenticated(true);
+            setKeepConnected(keepConnected);
+            await AsyncStorage.setItem('@mytodo-keepConnected', keepConnected.toString());
+          } else {
+            Alert.alert("Login", "Email ou senha inválidos.");
+          }
+        }
       } catch (error) {
         console.error("Erro ao salvar os dados no AsyncStorage:", error);
       }
@@ -89,12 +101,12 @@ function AuthProvider({ children }: any) {
   // Função de logout
   const logout = async () => {
     try {
-      await AsyncStorage.removeItem('@mytodo-user');
       await AsyncStorage.removeItem('@mytodo-keepConnected');
-
       setIsAuthenticated(false);
       setUser({ name: '', email: '', password: '' });
       setKeepConnected(false);
+
+      console.log("Logout efetuado com sucesso!");
     } catch (error) {
       console.error("Erro ao remover os dados do AsyncStorage:", error);
     }
@@ -114,7 +126,8 @@ function AuthProvider({ children }: any) {
           Alert.alert("Recuperação de conta", "E-mail não encontrado.");
         }
       } else {
-        Alert.alert("Recuperação de conta", "Nenhum usuário registrado.");
+        Alert.alert("Recuperação de conta", "Nenhum usuário registrado. Por favor, registre-se primeiro.");
+        setIsFirstAccess(true);
       }
     } catch (error) {
       Alert.alert("Recuperação de conta", "Erro ao tentar recuperar a senha: " + error);
@@ -125,6 +138,7 @@ function AuthProvider({ children }: any) {
     <AuthContext.Provider
       value={{
         isAuthenticated,
+        isFirstAccess,
         keepConnected,
         user,
         login,

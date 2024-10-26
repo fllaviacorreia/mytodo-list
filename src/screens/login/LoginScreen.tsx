@@ -3,62 +3,42 @@ import { View, Text, Alert } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RoutesParamList } from '../../navigation/AppNavigation';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Formik } from 'formik';
 import { LoginSchema } from '@/validates/login';
 import Button from '@/components/buttons/button';
 import Input from '@/components/inputs/input';
 import { styles } from './styles';
+import { useAuth } from '@/context/AuthContext';
+import Checkbox from '@/components/checkbox';
 
 type LoginScreenProp = NativeStackNavigationProp<RoutesParamList, "Login">;
 
 export default function LoginScreen() {
   const navigation = useNavigation<LoginScreenProp>();
-  // const { signIn } = React.useContext(AuthContext);
+  const authContext = useAuth();
   
-const storeData = async (value: { email: string; password: string }) => {
-  try {
-    // Tenta buscar o perfil armazenado
-    const profileData = await AsyncStorage.getItem('mytodo-profile');
-    const parsedProfile = profileData ? JSON.parse(profileData) : null;
-
-    // Verifica se existe um perfil armazenado
-    if (parsedProfile) {
-      if (parsedProfile.email === value.email) {
-        // Se o e-mail corresponde, armazena a sessão
-        await AsyncStorage.setItem('mytodo-session', JSON.stringify(value));
-        navigation.navigate('Home'); // Navegar para Home se tudo estiver certo
-      } else {
-        // Caso o e-mail não bata, mostra um alerta
-        Alert.alert("Erro", "E-mail não encontrado no perfil.");
-      }
-    } else {
-      // Caso nenhum perfil exista, cria um novo perfil e armazena a sessão
-      await AsyncStorage.setItem('mytodo-profile', JSON.stringify(value));
-      await AsyncStorage.setItem('mytodo-session', JSON.stringify(value));
-      navigation.navigate('Home'); // Navegar para Home após salvar o perfil
+  const storeData = async (value: { email: string; password: string, keepConnected: boolean }) => {
+    try {
+      await authContext.login(value.email, value.password, value.keepConnected);
+    } catch (e) {
+      console.error('Error storing data', e);
+      Alert.alert("Erro", "Ocorreu um erro ao verificar ou salvar o perfil.");
     }
-  } catch (e) {
-    // Erro ao salvar ou verificar o perfil
-    console.error('Error storing data', e);
-    Alert.alert("Erro", "Ocorreu um erro ao verificar ou salvar o perfil.");
-  }
-};
+  };
 
 
   return (
     <View style={styles.container}>
-            <Text style={styles.title}>MyToDo List</Text>
       <Formik
-        initialValues={{ email: '', password: '' }}
+        initialValues={{ email: '', password: '', keepConnected: false }}
         validationSchema={LoginSchema}
         onSubmit={async (values) => {
           await storeData(values); // Save session data
-          navigation.navigate('Home'); // Navigate to Home screen
         }}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
           <View style={styles.form}>
+            <Text style={styles.title}>MyToDo List</Text>
             <Input
               placeholder="Email"
               onChangeText={handleChange('email')}
@@ -75,12 +55,25 @@ const storeData = async (value: { email: string; password: string }) => {
               error={touched.password ? errors.password : ""}
             />
 
-            <Button className='primary' title="Login" onPress={handleSubmit as any} />
+            <Button
+              className='primary'
+              title="Login"
+              onPress={handleSubmit as any}
+            />
+            <Checkbox
+              title="Mantenha-me conectado"
+              value={values.keepConnected}
+              onValueChange={(value) => setFieldValue('keepConnected', value)} />
           </View>
         )}
       </Formik>
+
       <View style={styles.linkContainer}>
-        <Text style={styles.link}>Esqueci minha senha</Text>
+        <Button 
+          className='transparent' 
+          title="Esqueci minha senha" 
+          onPress={() => navigation.navigate('ForgotPassword')} />
+        {/* <Button className='warning' title="Criar conta" onPress={() => navigation.navigate('Register')} /> */}
       </View>
     </View>
   );

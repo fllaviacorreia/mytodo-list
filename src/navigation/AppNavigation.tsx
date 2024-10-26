@@ -5,13 +5,14 @@ import { Tabs } from "./BottomNavigation";
 
 // SCREENS
 import LoginScreen from "@/screens/login/LoginScreen";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import ForgotPasswordScreen from "@/screens/ForgotPasswordScreen";
-import { useEffect, useState } from "react";
+import ForgotPasswordScreen from "@/screens/forgotPassword/ForgotPasswordScreen";
+import RegisterScreen from "@/screens/register/RegisterScreen";
+import { useAuth } from "@/context/AuthContext";
 
 export type RoutesParamList = {
   Login: undefined;
   ForgotPassword: undefined;
+  Register: undefined;
   Home: undefined;
   NewTask: undefined;
   EditTask: undefined;
@@ -24,40 +25,19 @@ const Stack = createNativeStackNavigator();
 
 
 export default function AppNavigation() {
-  const [session, setSession] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // Função para carregar a sessão
-  useEffect(() => {
-    const loadSession = async () => {
-      try {
-        const storedSession = await AsyncStorage.getItem('mytodo-session');
-        setSession(storedSession);
-      } catch (error) {
-        console.error('Failed to load session:', error);
-      } finally {
-        setLoading(false); // Conclui o carregamento
-      }
-    };
-
-    loadSession(); // Chama a função para carregar a sessão
-  }, []);
-
-  // Enquanto estiver carregando, pode exibir um spinner ou algo assim
-  if (loading) {
-    return null; // Ou um indicador de carregamento (ex: <ActivityIndicator />)
-  }
+  const {isAuthenticated, isFirstAccess} = useAuth();
 
   return (
     <NavigationContainer>
-      {session ?
+      {isAuthenticated ?
        ( <Stack.Navigator initialRouteName="Home">
           <Stack.Screen name="Home" component={Tabs} options={{ headerShown: false }} />
         </Stack.Navigator>)
         :
-        (<Stack.Navigator initialRouteName="Login">
+        (<Stack.Navigator initialRouteName={isFirstAccess ? "Login" : "Register"}>
           <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
         </Stack.Navigator>)
       }
     </NavigationContainer>
