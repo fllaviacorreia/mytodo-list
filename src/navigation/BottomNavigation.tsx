@@ -3,11 +3,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // SCREENS
-import CompletedScreen from "@/screens/CompletedScreen";
-import DetailsScreen from "@/screens/DetailsScreen";
-import HomeScreen from "@/screens/HomeScreen";
-import NewTaskScreen from "@/screens/NewTaskScreen";
-import ProfileScreen from "@/screens/ProfileScreen";
+import CompletedScreen from "@/screens/tasks/finished/CompletedScreen";
+import DetailsScreen from "@/screens/tasks/details/DetailsScreen";
+import HomeScreen from "@/screens/tasks/HomeScreen";
+import NewTaskScreen from "@/screens/tasks/new/NewTaskScreen";
+import ProfileScreen from "@/screens/profile/ProfileScreen";
 
 // TEXT TO BOTTOM
 import { Text } from "react-native";

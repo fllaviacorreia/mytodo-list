@@ -7,15 +7,15 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     padding: 12,
-    marginBottom: 8,
+    marginBottom: 5,
   },
 
   input: {
     width: '100%',
-    height: 50,
+    height: 45,
     borderColor: theme.colors.gray,
     borderWidth: 1,
-    borderRadius: 25,
+    borderRadius: 18,
     paddingHorizontal: 25,
     fontSize: 16,
     backgroundColor: 'white',
@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
   error: {
     color: theme.colors.warning,
     fontSize: 16,
-    marginBottom: 8,
+    marginBottom: 2,
     width: '100%',
     paddingHorizontal: 12,
   },
