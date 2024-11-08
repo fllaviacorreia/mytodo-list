@@ -10,7 +10,7 @@ import { LoginSchema } from '@/validates/login';
 import { useAuth } from '@/context/AuthContext';
 import { styles } from './styles';
 
-type LoginScreenProp = NativeStackNavigationProp<RoutesParamList, "Login">;
+type LoginScreenProp = NativeStackNavigationProp<RoutesParamList, 'Login'>;
 
 /**
  * The LoginScreen component is responsible for rendering the login interface
