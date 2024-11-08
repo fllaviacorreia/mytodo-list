@@ -9,4 +9,5 @@ export const LoginSchema = object({
     .min(8, "Necessário possuir mínimo de 8 caracteres.")
     .trim()
     .required("Senha é obrigatória."),
+  keepConnected: boolean(),
 });
