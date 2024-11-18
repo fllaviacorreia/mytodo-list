@@ -10,9 +10,9 @@ export const RegisterSchema = object({
     .min(6, "Necessário possuir mínimo de 8 caracteres.")
     .trim()
     .required("Senha é obrigatório."),
-    confirmPassword: string()
-    .min(6, "Necessário possuir mínimo de 8 caracteres.")
-    .trim()
-    .equals(['password'], "As senhas devem ser iguais.")
-    .required("Confirmação de senha é obrigatório.")
+    // confirmPassword: string()
+    // .min(6, "Necessário possuir mínimo de 8 caracteres.")
+    // .trim()
+    // .equals(['password'], "As senhas devem ser iguais.")
+    // .required("Confirmação de senha é obrigatório.")
 });

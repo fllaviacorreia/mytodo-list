@@ -52,7 +52,7 @@ export function Tabs() {
             initialRouteName="Tasks" 
             screenOptions={{ 
                 tabBarInactiveTintColor: theme.colors.gray, 
-                tabBarActiveTintColor: theme.colors.primary, 
+                tabBarActiveTintColor: theme.colors.warning, 
                 headerShown: false 
             }}
         >
@@ -60,8 +60,8 @@ export function Tabs() {
                 name="Tasks" 
                 component={HomeScreen} 
                 options={{ 
-                    tabBarIcon: ({ focused, color, size }) => 
-                        <Octicons name="tasklist" size={20} color={color} />, 
+                    tabBarIcon: ({ color, size }) => 
+                        <Octicons name="tasklist" size={size} color={color} />, 
                     tabBarLabel: ({ color }) => 
                         <Text style={{ fontSize: 12, color: color }}>Tasks </Text> 
                 }} 

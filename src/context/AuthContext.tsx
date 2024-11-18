@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
-import { set } from "zod";
 
 // Definindo a interface para o contexto de autenticação
 type AuthContextType = {
@@ -21,32 +20,34 @@ const AuthContext = createContext<AuthContextType>({
   isFirstAccess: false,
   keepConnected: false,
   user: { name: '', email: '', password: '' },
-  login: async () => {},
-  register: async () => {},
-  logout: async () => {},
-  forgotPassword: async () => {}
+  login: async () => { },
+  register: async () => { },
+  logout: async () => { },
+  forgotPassword: async () => { }
 });
 
 function AuthProvider({ children }: any) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [keepConnected, setKeepConnected] = useState(false);
   const [user, setUser] = useState({ name: '', email: '', password: '' });
-  const [isFirstAccess, setIsFirstAccess] = useState(false);
+  const [isFirstAccess, setIsFirstAccess] = useState(true);
+
   // Função para carregar os dados do AsyncStorage
   const loadStoredData = async () => {
     try {
+      console.log("Carregando dados do AsyncStorage...");
       const storedUser = await AsyncStorage.getItem('@mytodo-user');
-      const storedKeepConnected = await AsyncStorage.getItem('@mytodo-keepConnected');
+      const storedKeepConnected = await AsyncStorage.getItem('@mytodo-keepConnected') === 'true';
 
       if (storedUser) {
         setUser(JSON.parse(storedUser));
-        setKeepConnected(storedKeepConnected === 'true');
-        setIsAuthenticated(keepConnected);
+        setKeepConnected(storedKeepConnected);
+        setIsAuthenticated(storedKeepConnected);
         setIsFirstAccess(false);
-      }else{
+      } else {
         setIsFirstAccess(true);
       }
-    
+
     } catch (error) {
       console.error("Erro ao carregar os dados do AsyncStorage:", error);
     }
@@ -57,11 +58,16 @@ function AuthProvider({ children }: any) {
     loadStoredData();
   }, []);
 
+  console.log("keepConnected", keepConnected);
+  console.log("isAuthenticated", isAuthenticated);
+  console.log("isFirstAccess", isFirstAccess);
+  console.log("user", user);
+
   // Função de login
   const login = async (email: string, password: string, keepConnected: boolean) => {
     if (email && password) {
       try {
-       const userStoraged = await AsyncStorage.getItem('@mytodo-user');
+        const userStoraged = await AsyncStorage.getItem('@mytodo-user');
 
         if (userStoraged) {
           const user = JSON.parse(userStoraged);
@@ -87,11 +93,14 @@ function AuthProvider({ children }: any) {
 
       try {
         await AsyncStorage.setItem('@mytodo-user', JSON.stringify(newUser));
+        await AsyncStorage.setItem('@mytodo-isFirstAccess', 'false');
         await AsyncStorage.setItem('@mytodo-keepConnected', 'false');
 
         setUser(newUser);
         setKeepConnected(true);
         setIsAuthenticated(true);
+        setIsFirstAccess(false);
+
       } catch (error) {
         console.error("Erro ao salvar os dados no AsyncStorage:", error);
       }
@@ -105,6 +114,7 @@ function AuthProvider({ children }: any) {
       setIsAuthenticated(false);
       setUser({ name: '', email: '', password: '' });
       setKeepConnected(false);
+      setIsFirstAccess(false);
 
       console.log("Logout efetuado com sucesso!");
     } catch (error) {
@@ -133,6 +143,8 @@ function AuthProvider({ children }: any) {
       Alert.alert("Recuperação de conta", "Erro ao tentar recuperar a senha: " + error);
     }
   };
+
+  
 
   return (
     <AuthContext.Provider

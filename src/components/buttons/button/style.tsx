@@ -7,11 +7,8 @@ export const styles = StyleSheet.create({
     
     // Estilo para o container do botão, define o layout e o espaçamento
     container: {
-      justifyContent: 'flex-start', // Alinhamento dos itens no início
-      alignItems: 'center', // Alinha os itens no centro horizontalmente
       width: '100%', // O container ocupa toda a largura disponível
-      padding: 12, // Espaçamento interno do container
-      marginBottom: 8, // Espaçamento inferior para separar do próximo componente
+      height: 50, // Altura fixa do container
     },
 
     // Estilo para o botão primário
@@ -19,7 +16,7 @@ export const styles = StyleSheet.create({
       width: '100%', // O botão ocupa toda a largura disponível
       height: 50, // Altura fixa do botão
       borderRadius: 25, // Borda arredondada para criar uma aparência circular
-      paddingHorizontal: 21, // Espaçamento interno nas laterais do botão
+      paddingHorizontal: 10, // Espaçamento interno nas laterais do botão
       backgroundColor: theme.colors.primary, // Cor de fundo retirada do tema
       justifyContent: 'center', // Alinhamento do conteúdo no centro vertical
       alignItems: 'center', // Alinhamento do conteúdo no centro horizontal
@@ -30,7 +27,7 @@ export const styles = StyleSheet.create({
       width: '100%',
       height: 50,
       borderRadius: 25,
-      paddingHorizontal: 21,
+      paddingHorizontal: 10,
       backgroundColor: theme.colors.secondary, // Cor de fundo para o estilo secundário
       justifyContent: 'center',
       alignItems: 'center',
@@ -41,7 +38,7 @@ export const styles = StyleSheet.create({
       width: '100%',
       height: 50,
       borderRadius: 25,
-      paddingHorizontal: 21,
+      paddingHorizontal: 10,
       backgroundColor: theme.colors.warning, // Cor de fundo para o botão de alerta
       justifyContent: 'center',
       alignItems: 'center',
@@ -52,7 +49,7 @@ export const styles = StyleSheet.create({
       width: '100%',
       height: 50,
       borderRadius: 25,
-      paddingHorizontal: 21,
+      paddingHorizontal: 10,
       backgroundColor: 'transparent', // Fundo transparente
       justifyContent: 'center',
       alignItems: 'center',
