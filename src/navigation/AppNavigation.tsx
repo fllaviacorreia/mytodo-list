@@ -8,6 +8,7 @@ import LoginScreen from "@/screens/login/LoginScreen";
 import ForgotPasswordScreen from "@/screens/forgotPassword/ForgotPasswordScreen";
 import RegisterScreen from "@/screens/register/RegisterScreen";
 import { useAuth } from "@/context/AuthContext";
+import NewTaskScreen from "@/screens/tasks/new/NewTaskScreen";
 
 export type RoutesParamList = {
   Login: undefined;
@@ -32,9 +33,10 @@ export default function AppNavigation() {
       {isAuthenticated ?
        ( <Stack.Navigator initialRouteName="Home">
           <Stack.Screen name="Home" component={Tabs} options={{ headerShown: false }} />
+          <Stack.Screen name="NewTask" component={NewTaskScreen} />
         </Stack.Navigator>)
         :
-        (<Stack.Navigator initialRouteName={isFirstAccess ? "Login" : "Register"}>
+        (<Stack.Navigator initialRouteName={isFirstAccess ? "Register" : "Login"}>
           <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />

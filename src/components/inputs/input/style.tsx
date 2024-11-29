@@ -25,6 +25,6 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 2,
     width: '100%',
-    paddingHorizontal: 12,
+    paddingHorizontal: 25,
   },
 });
